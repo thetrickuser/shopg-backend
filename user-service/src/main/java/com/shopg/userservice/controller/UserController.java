@@ -1,5 +1,7 @@
 package com.shopg.userservice.controller;
 
+import com.shopg.userservice.model.LoginRequest;
+import com.shopg.userservice.model.LoginResponse;
 import com.shopg.userservice.model.SignupRequest;
 import com.shopg.userservice.model.SignupResponse;
 import com.shopg.userservice.service.UserService;
@@ -19,6 +21,12 @@ public class UserController {
     @PostMapping("/auth/signup")
     public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest request) {
         SignupResponse response = userService.signup(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
         return ResponseEntity.ok(response);
     }
 }
