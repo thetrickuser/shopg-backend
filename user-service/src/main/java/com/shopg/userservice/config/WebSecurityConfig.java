@@ -28,8 +28,8 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole(ROLES.ADMIN.toString().toLowerCase())
-                                .requestMatchers("/user/**").hasRole(ROLES.USER.toString().toLowerCase())
+                                .requestMatchers("/admin/**").hasRole(ROLES.ADMIN.toString())
+                                .requestMatchers("/user/**").hasRole(ROLES.USER.toString())
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

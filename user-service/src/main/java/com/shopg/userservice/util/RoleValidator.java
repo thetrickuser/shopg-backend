@@ -8,8 +8,8 @@ public class RoleValidator implements ConstraintValidator<ValidateRole, String> 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         try {
-            // Convert the string value to uppercase and check if it's a valid enum value
-            ROLES.valueOf(value.toUpperCase());
+            // Check if it's a valid enum value
+            ROLES.valueOf(value);
             return true;
         } catch (IllegalArgumentException e) {
             return false;
