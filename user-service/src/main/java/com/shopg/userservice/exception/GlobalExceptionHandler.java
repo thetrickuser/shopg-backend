@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(BadCredentialsException e) {
         ErrorResponse errorResponse =
-                buildErrorResponse(HttpStatus.FORBIDDEN.name(), List.of(new Error("",e.getMessage())));
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+                buildErrorResponse(HttpStatus.UNAUTHORIZED.name(), List.of(new Error("",e.getMessage())));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -31,6 +31,12 @@ public class GlobalExceptionHandler {
                 .toList();
         ErrorResponse errorResponse = buildErrorResponse(HttpStatus.BAD_REQUEST.name(), errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
+        ErrorResponse errorResponse = buildErrorResponse(HttpStatus.FORBIDDEN.name(), List.of(new Error("",e.getMessage())));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     private ErrorResponse buildErrorResponse(String errorCode, List<Error> errors) {

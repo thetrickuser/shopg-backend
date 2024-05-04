@@ -2,16 +2,16 @@ package com.shopg.userservice.service;
 
 import com.shopg.userservice.entity.User;
 import com.shopg.userservice.mapper.SignupRequestMapper;
-import com.shopg.userservice.model.LoginRequest;
-import com.shopg.userservice.model.LoginResponse;
-import com.shopg.userservice.model.SignupRequest;
-import com.shopg.userservice.model.SignupResponse;
+import com.shopg.userservice.model.*;
 import com.shopg.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -44,5 +44,15 @@ public class UserService {
         String refreshToken = jwtService.generateRefreshToken(request.getEmail());
 
         return new LoginResponse(token, refreshToken);
+    }
+
+    public String refresh(RefreshTokenRequest request) {
+        String username = jwtService.extractUsername(request.getToken());
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("No user found"));
+        if (jwtService.isTokenValid(request.getToken(), user)) {
+            return jwtService.generateToken(username);
+        } else {
+            throw new BadCredentialsException("Invalid refresh token. Please login again");
+        }
     }
 }
