@@ -14,7 +14,4 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
-
-    @Size(min = 10, max = 10)
-    private String phone;
 }
