@@ -6,22 +6,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(BadCredentialsException e) {
-        ErrorResponse errorResponse =
-                buildErrorResponse(HttpStatus.UNAUTHORIZED.name(), List.of(new Error("",e.getMessage())));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAccessDenied(BadCredentialsException e) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED.name(), List.of(new Error("password",e.getMessage())));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleUserNotFound(UsernameNotFoundException e) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND.name(), List.of(new Error("email",e.getMessage())));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

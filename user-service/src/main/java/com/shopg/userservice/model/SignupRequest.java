@@ -12,9 +12,7 @@ import lombok.Data;
 public class SignupRequest {
 
     @NotBlank
-    private String fname;
-
-    private String lname;
+    private String name;
 
     @Email
     @NotBlank
@@ -28,11 +26,5 @@ public class SignupRequest {
 
     @Size(min = 10, max = 10)
     private String phone;
-
-    @Valid
-    private Address billingAddress;
-
-    @Valid
-    private Address shippingAddress;
 
 }

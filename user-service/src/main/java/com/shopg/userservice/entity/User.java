@@ -22,9 +22,7 @@ public class User implements UserDetails {
     private long id;
 
     @NotBlank
-    private String fname;
-
-    private String lname;
+    private String name;
 
     @Email
     private String email;

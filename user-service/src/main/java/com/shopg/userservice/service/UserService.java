@@ -39,6 +39,7 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest request) {
+//        userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("No user found"));
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         String token = jwtService.generateToken(request.getEmail());
         String refreshToken = jwtService.generateRefreshToken(request.getEmail());
