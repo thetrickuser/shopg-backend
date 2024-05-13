@@ -2,6 +2,7 @@ package com.shopg.userservice.service;
 
 import com.shopg.userservice.entity.User;
 import com.shopg.userservice.mapper.SignupRequestMapper;
+import com.shopg.userservice.mapper.UserMapper;
 import com.shopg.userservice.model.*;
 import com.shopg.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,6 +26,8 @@ public class UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserMapper userMapper;
 
     public SignupResponse signup(SignupRequest request) {
         try {
@@ -39,12 +40,11 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest request) {
-//        userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("No user found"));
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        String token = jwtService.generateToken(request.getEmail());
         String refreshToken = jwtService.generateRefreshToken(request.getEmail());
+        UserDto user = userMapper.mapToUserDto(userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("No user found")));
 
-        return new LoginResponse(token, refreshToken);
+        return new LoginResponse(refreshToken, user);
     }
 
     public String refresh(RefreshTokenRequest request) {

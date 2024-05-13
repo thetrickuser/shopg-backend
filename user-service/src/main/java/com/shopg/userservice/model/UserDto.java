@@ -8,15 +8,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class User {
+public class UserDto {
 
     @NotBlank
-    private long id;
-
-    @NotBlank
-    private String fname;
-
-    private String lname;
+    private String name;
 
     @Email
     @NotBlank

@@ -1,7 +1,7 @@
 package com.shopg.userservice.service;
 
 import com.shopg.userservice.mapper.UserMapper;
-import com.shopg.userservice.model.User;
+import com.shopg.userservice.model.UserDto;
 import com.shopg.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class AdminService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::mapToUserDto).collect(Collectors.toList());
     }
 }

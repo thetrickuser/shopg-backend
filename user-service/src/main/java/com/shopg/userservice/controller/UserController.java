@@ -1,43 +1,38 @@
 package com.shopg.userservice.controller;
 
-import com.shopg.userservice.model.*;
-import com.shopg.userservice.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shopg.userservice.mapper.UserMapper;
+import com.shopg.userservice.model.UserDto;
+import com.shopg.userservice.repository.UserRepository;
+import com.shopg.userservice.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    private UserService userService;
+    private JwtService jwtService;
 
-    @PostMapping("/signup")
-    public SignupResponse signup(@Valid @RequestBody SignupRequest request) {
-        return userService.signup(request);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
-    @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        return userService.login(request);
-    }
+    @Autowired
+    private UserMapper userMapper;
 
-    @PostMapping("/refresh")
-    public void refresh(@Valid @RequestBody RefreshTokenRequest request, HttpServletResponse response) {
-        String newToken = userService.refresh(request);
-        Cookie cookie = new Cookie("token", newToken);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
+    @GetMapping("/getUser")
+    public UserDto getUser(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String username = jwtService.extractUsername(token);
+        Optional<com.shopg.userservice.entity.User> userOptional = userRepository.findByEmail(username);
+        if (userOptional.isPresent()) {
+            return userMapper.mapToUserDto(userOptional.get());
+        }
+        return null;
     }
 }

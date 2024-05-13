@@ -1,6 +1,6 @@
 package com.shopg.userservice.controller;
 
-import com.shopg.userservice.model.User;
+import com.shopg.userservice.model.UserDto;
 import com.shopg.userservice.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping("/fetchAllUsers")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(adminService.getAllUsers());
     }
 }

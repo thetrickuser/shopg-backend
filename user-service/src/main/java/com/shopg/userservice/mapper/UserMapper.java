@@ -1,10 +1,10 @@
 package com.shopg.userservice.mapper;
 
-import com.shopg.userservice.model.User;
+import com.shopg.userservice.model.UserDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    User mapToUserDto(com.shopg.userservice.entity.User user);
+    UserDto mapToUserDto(com.shopg.userservice.entity.User user);
 }
